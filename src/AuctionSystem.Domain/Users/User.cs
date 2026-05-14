@@ -22,8 +22,10 @@ namespace AuctionSystem.Domain.Users
         {
             if (id is null)
                 throw new ArgumentNullException(nameof(id));
+
             if (email is null) 
                 throw new ArgumentNullException(nameof(email));
+
             if (passwordHash is null) 
                 throw new ArgumentNullException(nameof(passwordHash));
 
