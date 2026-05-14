@@ -3,8 +3,7 @@
     public enum ErrorType
     {
         None = 0,
-        Failure = 1,
+        Validation = 1,
         NotFound = 2,
-        Conflict = 3
     }
 }
