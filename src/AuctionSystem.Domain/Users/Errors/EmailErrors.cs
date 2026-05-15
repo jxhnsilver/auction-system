@@ -1,6 +1,6 @@
 ﻿using AuctionSystem.Domain.Primitives;
 
-namespace AuctionSystem.Domain.Users
+namespace AuctionSystem.Domain.Users.Errors
 {
     public static class EmailErrors
     {
