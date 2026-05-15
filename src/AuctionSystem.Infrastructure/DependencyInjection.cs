@@ -1,4 +1,5 @@
-﻿using AuctionSystem.Infrastructure.Persistence.Context;
+﻿using AuctionSystem.Application.Abstractions;
+using AuctionSystem.Infrastructure.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,6 +19,8 @@ namespace AuctionSystem.Infrastructure
                 options.UseNpgsql(
                     connectionString,
                     x => x.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)).UseSnakeCaseNamingConvention());
+
+            services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<ApplicationDbContext>());
 
             return services;
         }
