@@ -1,6 +1,6 @@
 ﻿using AuctionSystem.Domain.Primitives;
 
-namespace AuctionSystem.Domain.Users
+namespace AuctionSystem.Domain.Users.Errors
 {
     public static class UserErrors
     {
@@ -8,7 +8,7 @@ namespace AuctionSystem.Domain.Users
             $"The user with the Id = '{userId}' was not found");
         public static Error NotFound(Email email) => Error.NotFound(
             $"User with email '{email.Value}' was not found");
-        public static Error InvalidCredentials() => Error.Failure(
-            "Invalid email or password");
+        public static Error InvalidCredentials() => Error.Validation(
+            "Invalid credentials");
     }
 }

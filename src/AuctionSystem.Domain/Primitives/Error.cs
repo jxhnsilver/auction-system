@@ -13,11 +13,9 @@
             Type = type;
         }
 
-        public static Error Failure(string message)
-            => new(message, ErrorType.Failure);
+        public static Error Validation(string message)
+            => new(message, ErrorType.Validation);
         public static Error NotFound(string message)
             => new(message, ErrorType.NotFound);
-        public static Error Conflict(string message)
-            => new(message, ErrorType.Conflict);
     }
 }

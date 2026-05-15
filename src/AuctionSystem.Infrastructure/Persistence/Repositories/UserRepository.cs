@@ -1,0 +1,30 @@
+﻿using AuctionSystem.Domain.Users;
+using AuctionSystem.Infrastructure.Persistence.Context;
+using Microsoft.EntityFrameworkCore;
+
+namespace AuctionSystem.Infrastructure.Persistence.Repositories
+{
+    public class UserRepository(ApplicationDbContext context) : IUserRepository
+    {
+        public void Add(User user)
+        {
+            context.Add(user);  
+        }
+
+        public async Task<User?> GetByEmail(Email email, CancellationToken cancellationToken)
+        {
+            return await context.Users
+                .AsNoTracking()
+                .Where(u => u.Email == email)
+                .SingleOrDefaultAsync(cancellationToken);
+        }
+
+        public async Task<User?> GetById(UserId userId, CancellationToken cancellationToken)
+        {
+            return await context.Users
+                .AsNoTracking()
+                .Where(u => u.Id == userId)
+                .SingleOrDefaultAsync(cancellationToken);
+        }
+    }
+}

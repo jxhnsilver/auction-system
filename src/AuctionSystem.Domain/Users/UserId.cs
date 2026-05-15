@@ -15,7 +15,7 @@
         public static UserId New() => new UserId(Guid.NewGuid());
 
         /// <summary>
-        /// Creates a user identifier from an existing GUID value.
+        /// Creates an user identifier from an existing GUID value.
         /// </summary>
         /// <param name="userId">The GUID value.</param>
         /// <exception cref="ArgumentException">Thrown when the GUID is empty.</exception>
