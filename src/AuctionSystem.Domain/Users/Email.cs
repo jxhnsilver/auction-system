@@ -1,4 +1,5 @@
 ﻿using AuctionSystem.Domain.Primitives;
+using AuctionSystem.Domain.Users.Errors;
 using System.Text.RegularExpressions;
 
 namespace AuctionSystem.Domain.Users
