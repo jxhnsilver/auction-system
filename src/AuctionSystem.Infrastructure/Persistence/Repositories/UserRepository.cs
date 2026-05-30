@@ -11,7 +11,7 @@ namespace AuctionSystem.Infrastructure.Persistence.Repositories
             context.Add(user);  
         }
 
-        public async Task<User?> GetByEmail(Email email, CancellationToken cancellationToken)
+        public async Task<User?> GetByEmailAsync(Email email, CancellationToken cancellationToken)
         {
             return await context.Users
                 .AsNoTracking()
@@ -19,7 +19,7 @@ namespace AuctionSystem.Infrastructure.Persistence.Repositories
                 .SingleOrDefaultAsync(cancellationToken);
         }
 
-        public async Task<User?> GetById(UserId userId, CancellationToken cancellationToken)
+        public async Task<User?> GetByIdAsync(UserId userId, CancellationToken cancellationToken)
         {
             return await context.Users
                 .AsNoTracking()

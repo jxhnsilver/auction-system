@@ -1,5 +1,12 @@
 ﻿using AuctionSystem.Application.Abstractions;
+using AuctionSystem.Domain.Primitives;
+using AuctionSystem.Domain.Users;
+using AuctionSystem.Infrastructure.Authentication;
+using AuctionSystem.Infrastructure.Authentication.Jwt;
+using AuctionSystem.Infrastructure.Extensions;
 using AuctionSystem.Infrastructure.Persistence.Context;
+using AuctionSystem.Infrastructure.Persistence.Repositories;
+using AuctionSystem.Infrastructure.Time;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,7 +18,6 @@ namespace AuctionSystem.Infrastructure
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
             var connectionString = configuration.GetConnectionString("DefaultConnection");
-
             if (string.IsNullOrEmpty(connectionString))
                 throw new InvalidOperationException("Connection string is not configured");
 
@@ -21,6 +27,20 @@ namespace AuctionSystem.Infrastructure
                     x => x.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)).UseSnakeCaseNamingConvention());
 
             services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<ApplicationDbContext>());
+            services.AddScoped<IUserRepository, UserRepository>();
+
+            services.AddSingleton<IPasswordHasher, PasswordHasher>();
+            services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
+
+            var jwtSettings = configuration.GetSection("JwtSettings").Get<JwtSettings>();
+            JwtSettingsValidator.Validate(jwtSettings!);
+
+            services.AddSingleton<ITokenProvider, JwtTokenProvider>();
+            services.AddHttpContextAccessor();
+            services.AddScoped<ICurrentUserProvider, CurrentUserProvider>();
+            services.AddJwtAuthentication(configuration);
+
+            services.AddSingleton<IClock, SystemClock>();
 
             return services;
         }

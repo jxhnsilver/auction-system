@@ -17,5 +17,9 @@
             => new(message, ErrorType.Validation);
         public static Error NotFound(string message)
             => new(message, ErrorType.NotFound);
+        public static Error Conflict(string message)
+            => new(message, ErrorType.Conflict);
+        public static Error Unauthorized(string message)
+            => new(message, ErrorType.Unauthorized);
     }
 }

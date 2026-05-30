@@ -10,5 +10,7 @@ namespace AuctionSystem.Domain.Users.Errors
             $"User with email '{email.Value}' was not found");
         public static Error InvalidCredentials() => Error.Validation(
             "Invalid credentials");
+        public static Error EmailNotUnique() => Error.Conflict(
+            "The provided email is already taken");
     }
 }

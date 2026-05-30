@@ -9,5 +9,13 @@
   <ItemGroup>
     <ProjectReference Include="..\AuctionSystem.Application\AuctionSystem.Application.csproj" />
   </ItemGroup>
+	
+  <ItemGroup>
+  	<FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+	
+  <ItemGroup>
+    <PackageReference Include="MediatR.Contracts" Version="2.0.1" />
+  </ItemGroup>
 
 </Project>

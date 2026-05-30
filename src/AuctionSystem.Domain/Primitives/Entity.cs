@@ -8,10 +8,8 @@
         {
             Id = id;
         }
-
-        /// <summary>
-        /// Parameterless constructor required by EF Core
-        /// </summary>
+        
+        // Parameterless constructor required by EF Core
         protected Entity() { }
     }
 }

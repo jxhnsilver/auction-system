@@ -4,11 +4,11 @@ using System.Text.RegularExpressions;
 
 namespace AuctionSystem.Domain.Users
 {
-    public record Email
+    public sealed record Email
     {
-        private static readonly Regex EmailRegex = new Regex(
+        private static readonly Regex EmailRegex = new(
             @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$",
-            RegexOptions.Compiled);
+            RegexOptions.Compiled | RegexOptions.CultureInvariant);
 
         private const int MaxLocalLength = 64; // RFC 5321
 
@@ -27,12 +27,12 @@ namespace AuctionSystem.Domain.Users
             if (string.IsNullOrWhiteSpace(email))
                 return Result<Email>.Failure(EmailErrors.Empty);
 
-            var normalizedEmail = Normalize(email);
+            var normalized = Normalize(email);
 
-            if (!IsValid(normalizedEmail))
+            if (!IsValid(normalized))
                 return Result<Email>.Failure(EmailErrors.InvalidFormat);
 
-            return Result<Email>.Success(new Email(normalizedEmail));
+            return Result<Email>.Success(new Email(normalized));
         }
 
         private static bool IsValid(string email)
@@ -50,9 +50,10 @@ namespace AuctionSystem.Domain.Users
 
             return true;
         }
+
         private static string Normalize(string email)
-        {
-            return email.Trim().ToLowerInvariant();
-        }
+            => email.Trim().ToLowerInvariant();
+
+        public override string ToString() => Value;
     }
 }
