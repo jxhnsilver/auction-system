@@ -27,9 +27,6 @@ namespace AuctionSystem.Infrastructure.Persistence.Configurations
             builder.HasIndex(u => u.Email).IsUnique();
 
             builder.Property(u => u.PasswordHash)
-                .HasConversion(
-                    passwordHash => passwordHash.Value,
-                    value => PasswordHash.Create(value))
                 .IsRequired();
         }
     }

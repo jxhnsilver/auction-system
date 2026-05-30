@@ -4,9 +4,7 @@
     {
         protected AggregateRoot(TId id) : base(id) { }
 
-        /// <summary>
-        /// Parameterless constructor required by EF Core
-        /// </summary>
+        // Parameterless constructor required by EF Core
         protected AggregateRoot() { }
     }
 }
