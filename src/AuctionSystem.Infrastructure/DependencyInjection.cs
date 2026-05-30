@@ -21,6 +21,9 @@ namespace AuctionSystem.Infrastructure
                     x => x.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)).UseSnakeCaseNamingConvention());
 
             services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<ApplicationDbContext>());
+            services.AddScoped<IUserRepository, UserRepository>();
+
+            services.AddSingleton<IPasswordHasher, PasswordHasher>();
 
             return services;
         }
