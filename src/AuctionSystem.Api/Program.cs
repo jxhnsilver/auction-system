@@ -1,9 +1,17 @@
+using AuctionSystem.Application;
 using AuctionSystem.Infrastructure;
+using AuctionSystem.Presentation;
+using AuctionSystem.Presentation.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services
+    .AddApplication()
+    .AddPresentation()
+    .AddInfrastructure(builder.Configuration);
 
 var app = builder.Build();
+
+app.MapEndpoints();
 
 app.Run();
