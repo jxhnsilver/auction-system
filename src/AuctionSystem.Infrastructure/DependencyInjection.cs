@@ -24,7 +24,13 @@ namespace AuctionSystem.Infrastructure
             services.AddScoped<IUserRepository, UserRepository>();
 
             services.AddSingleton<IPasswordHasher, PasswordHasher>();
+            services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
 
+            var jwtSettings = configuration.GetSection("JwtSettings").Get<JwtSettings>();
+            JwtSettingsValidator.Validate(jwtSettings!);
+
+            services.AddSingleton<ITokenProvider, JwtTokenProvider>();
+            services.AddJwtAuthentication(configuration);
             return services;
         }
     }
