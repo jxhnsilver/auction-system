@@ -18,8 +18,7 @@ namespace AuctionSystem.Application.Features.Users.Register
             if (emailResult.IsFailure)
                 return Result<Guid>.Failure(emailResult.Error);
 
-            var existingUser = await userRepository.GetByEmailAsync(emailResult.Value, cancellationToken);
-            if (existingUser is not null)
+            if (await userRepository.ExistsByEmailAsync(emailResult.Value, cancellationToken))
                 return Result<Guid>.Failure(UserErrors.EmailNotUnique());
 
             var passwordHash = passwordHasher.Hash(request.Password);
@@ -28,7 +27,7 @@ namespace AuctionSystem.Application.Features.Users.Register
 
             userRepository.Add(user);
 
-            await uow.SaveChangesAsync();
+            await uow.SaveChangesAsync(cancellationToken);
 
             return Result<Guid>.Success(user.Id.Value);
         }

@@ -26,5 +26,9 @@ namespace AuctionSystem.Infrastructure.Persistence.Repositories
                 .Where(u => u.Id == userId)
                 .SingleOrDefaultAsync(cancellationToken);
         }
+        public async Task<bool> ExistsByEmailAsync(Email email, CancellationToken cancellationToken)
+        {
+            return await context.Users.AnyAsync(u => u.Email == email, cancellationToken);
+        }
     }
 }
