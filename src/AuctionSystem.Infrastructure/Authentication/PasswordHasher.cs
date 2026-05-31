@@ -31,17 +31,24 @@ namespace AuctionSystem.Infrastructure.Authentication
             if (parts.Length != 2)
                 return false;
 
-            byte[] salt = Convert.FromHexString(parts[0]);
-            byte[] hash = Convert.FromHexString(parts[1]);
+            try
+            {
+                byte[] salt = Convert.FromHexString(parts[0]);
+                byte[] hash = Convert.FromHexString(parts[1]);
 
-            byte[] inputHash = Rfc2898DeriveBytes.Pbkdf2(
-                password,
-                salt,
-                Iterations,
-                Algorithm,
-                hash.Length);
+                byte[] inputHash = Rfc2898DeriveBytes.Pbkdf2(
+                    password,
+                    salt,
+                    Iterations,
+                    Algorithm,
+                    hash.Length);
 
-            return CryptographicOperations.FixedTimeEquals(hash, inputHash);
+                return CryptographicOperations.FixedTimeEquals(hash, inputHash);
+            }
+            catch (FormatException)
+            {
+                return false;
+            }
         }
     }
 }

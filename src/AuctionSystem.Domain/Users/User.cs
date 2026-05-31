@@ -2,7 +2,7 @@
 
 namespace AuctionSystem.Domain.Users
 {
-    public class User : AggregateRoot<UserId>
+    public sealed class User : AggregateRoot<UserId>
     {
         public Email Email { get; private set; }
         public string PasswordHash { get; private set; }

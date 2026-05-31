@@ -1,6 +1,6 @@
 ﻿namespace AuctionSystem.Domain.Users
 {
-    public record UserId
+    public sealed record UserId
     {
         public Guid Value { get; }
 
