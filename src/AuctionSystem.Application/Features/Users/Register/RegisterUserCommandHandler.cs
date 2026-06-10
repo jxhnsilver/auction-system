@@ -19,7 +19,7 @@ namespace AuctionSystem.Application.Features.Users.Register
                 return Result<Guid>.Failure(emailResult.Error);
 
             if (await userRepository.ExistsByEmailAsync(emailResult.Value, cancellationToken))
-                return Result<Guid>.Failure(UserErrors.EmailNotUnique());
+                return Result<Guid>.Failure(UserErrors.EmailNotUnique);
 
             var passwordHash = passwordHasher.Hash(request.Password);
 
