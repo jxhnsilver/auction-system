@@ -1,5 +1,7 @@
 ﻿using AuctionSystem.Application.Abstractions;
+using AuctionSystem.Domain.Lots;
 using AuctionSystem.Domain.Primitives;
+using AuctionSystem.Domain.Auctions;
 using AuctionSystem.Domain.Users;
 using AuctionSystem.Infrastructure.Authentication;
 using AuctionSystem.Infrastructure.Authentication.Jwt;
@@ -27,6 +29,8 @@ namespace AuctionSystem.Infrastructure
                     x => x.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)).UseSnakeCaseNamingConvention());
 
             services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<ApplicationDbContext>());
+            services.AddScoped<IAuctionRepository, AuctionRepository>();
+            services.AddScoped<ILotRepository, LotRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
 
             services.AddSingleton<IPasswordHasher, PasswordHasher>();
