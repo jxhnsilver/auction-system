@@ -10,6 +10,8 @@ builder.Services
     .AddPresentation()
     .AddInfrastructure(builder.Configuration);
 
+builder.Services.AddAuthorization();
+
 var app = builder.Build();
 
 app.UseAuthentication();
