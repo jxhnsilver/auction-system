@@ -4,7 +4,7 @@ using AuctionSystem.Domain.Users;
 using AuctionSystem.Domain.Users.Errors;
 using MediatR;
 
-namespace AuctionSystem.Application.Features.Users.Login
+namespace AuctionSystem.Application.Features.Users.Commands.Login
 {
     public class LoginUserCommandHandler(
         IUserRepository userRepository,
