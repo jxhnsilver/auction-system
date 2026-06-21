@@ -4,6 +4,9 @@ namespace AuctionSystem.Domain.Auctions
 {
     public static class AuctionErrors
     {
+        public static Error InvalidAuctionId() => Error.Validation("Invalid auction id");
+        public static Error NotFound(AuctionId auctionId) => Error.NotFound(
+            $"Auction with id '{auctionId.Value}' was not found");
         public static Error InvalidStatus(AuctionStatus current, AuctionStatus expected) => Error.Conflict(
             $"Invalid auction status. Current: {current}. Expected: {expected}");
         public static Error InvalidStartingPrice(decimal startingPrice) => Error.Validation(
@@ -22,5 +25,7 @@ namespace AuctionSystem.Domain.Auctions
             $"Auction is not in bidding window. Now: {now}, Start: {startTime}, End: {endTime}");
         public static Error CannotCloseBeforeEnd(DateTime now, DateTime endTime) => Error.Conflict(
             $"Auction cannot be closed before end time. Now: {now}, End: {endTime}");
+        public static Error StartTimeCannotBeInPast(DateTime startTime) => Error.Validation(
+            $"Start time '{startTime}' cannot be in the past");
     }
 }

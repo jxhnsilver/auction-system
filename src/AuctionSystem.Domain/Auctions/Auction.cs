@@ -1,4 +1,5 @@
-﻿using AuctionSystem.Domain.Primitives;
+﻿using AuctionSystem.Domain.Lots;
+using AuctionSystem.Domain.Primitives;
 using AuctionSystem.Domain.Users;
 
 namespace AuctionSystem.Domain.Auctions
@@ -8,6 +9,7 @@ namespace AuctionSystem.Domain.Auctions
         private readonly List<Bid> _bids = [];
 
         public UserId SellerId { get; private set; }
+        public LotId LotId { get; private set; }
         public decimal StartingPrice { get; private set; }
         public decimal CurrentPrice { get; private set; }
         public AuctionStatus Status { get; private set; }
@@ -23,51 +25,61 @@ namespace AuctionSystem.Domain.Auctions
         private Auction(
             AuctionId auctionId,
             UserId sellerId,
+            LotId lotId,
             decimal startingPrice,
             DateTime startTime,
-            DateTime endTime) : base(auctionId)
+            DateTime endTime,
+            AuctionStatus status) : base(auctionId)
         {
             SellerId = sellerId;
+            LotId = lotId;
             StartingPrice = startingPrice;
             CurrentPrice = startingPrice;
-            Status = AuctionStatus.Draft;
+            Status = status;
             StartTime = startTime;
             EndTime = endTime;
         }
 
-        public static Result<Auction> Create(
+        public static Result<Auction> CreateScheduled(
             UserId sellerId,
+            LotId lotId,
             decimal startingPrice,
             DateTime startTime,
+            DateTime endTime,
+            DateTime now)
+        {
+            if (now < startTime)
+                return Result<Auction>.Failure(AuctionErrors.StartTimeCannotBeInPast(startTime));
+
+            var validationResult = ValidateCreateInput(sellerId, startingPrice, startTime, endTime);
+            if (validationResult.IsFailure)
+                return Result<Auction>.Failure(validationResult.Error);
+
+            var auction = new Auction(AuctionId.New(), sellerId, lotId, startingPrice, startTime, endTime, AuctionStatus.Scheduled);
+
+            return Result<Auction>.Success(auction);
+        }
+
+        public static Result<Auction> CreateNow(
+            UserId sellerId,
+            LotId lotId,
+            decimal startingPrice,
+            DateTime now,
             DateTime endTime)
         {
-            if (sellerId is null)
-                throw new ArgumentNullException(nameof(sellerId));
+            var validationResult = ValidateCreateInput(sellerId, startingPrice, now, endTime);
+            if (validationResult.IsFailure)
+                return Result<Auction>.Failure(validationResult.Error);
 
-            if (startingPrice <= 0)
-                return Result<Auction>.Failure(AuctionErrors.InvalidStartingPrice(startingPrice));
-
-            if (startTime == default)
-                throw new ArgumentException("StartTime must be a valid datetime", nameof(startTime));
-
-            if (endTime == default)
-                throw new ArgumentException("EndTime must be a valid datetime", nameof(endTime));
-
-            if (endTime <= startTime)
-                return Result<Auction>.Failure(AuctionErrors.InvalidTimeRange(startTime, endTime));
-
-            var auction = new Auction(AuctionId.New(), sellerId, startingPrice, startTime, endTime);
+            var auction = new Auction(AuctionId.New(), sellerId, lotId, startingPrice, now, endTime, AuctionStatus.Active);
 
             return Result<Auction>.Success(auction);
         }
 
         public Result Open(DateTime now)
         {
-            if (now == default)
-                throw new ArgumentException("Now must be a valid datetime", nameof(now));
-
-            if (Status != AuctionStatus.Draft)
-                return Result.Failure(AuctionErrors.InvalidStatus(Status, AuctionStatus.Draft));
+            if (Status != AuctionStatus.Scheduled)
+                return Result.Failure(AuctionErrors.InvalidStatus(Status, AuctionStatus.Scheduled));
 
             if (now < StartTime)
                 return Result.Failure(AuctionErrors.NotStarted(StartTime, now));
@@ -77,13 +89,11 @@ namespace AuctionSystem.Domain.Auctions
             return Result.Success();
         }
 
+
         public Result<Bid> PlaceBid(UserId bidderId, decimal amount, DateTime now)
         {
             if (bidderId is null)
                 throw new ArgumentNullException(nameof(bidderId));
-
-            if (now == default)
-                throw new ArgumentException("Now must be a valid datetime", nameof(now));
 
             if (Status != AuctionStatus.Active)
                 return Result<Bid>.Failure(AuctionErrors.InvalidStatus(Status, AuctionStatus.Active));
@@ -113,9 +123,6 @@ namespace AuctionSystem.Domain.Auctions
 
         public Result Close(DateTime now)
         {
-            if (now == default)
-                throw new ArgumentException("Now must be a valid datetime", nameof(now));
-
             if (Status != AuctionStatus.Active)
                 return Result.Failure(AuctionErrors.InvalidStatus(Status, AuctionStatus.Active));
 
@@ -123,6 +130,30 @@ namespace AuctionSystem.Domain.Auctions
                 return Result.Failure(AuctionErrors.CannotCloseBeforeEnd(now, EndTime));
 
             Status = AuctionStatus.Closed;
+            return Result.Success();
+        }
+
+        private static Result ValidateCreateInput(
+            UserId sellerId,
+            decimal startingPrice,
+            DateTime startTime,
+            DateTime endTime)
+        {
+            if (sellerId is null)
+                throw new ArgumentNullException(nameof(sellerId));
+
+            if (startingPrice <= 0)
+                return Result.Failure(AuctionErrors.InvalidStartingPrice(startingPrice));
+
+            if (startTime == default)
+                throw new ArgumentException("StartTime must be a valid datetime", nameof(startTime));
+
+            if (endTime == default)
+                throw new ArgumentException("EndTime must be a valid datetime", nameof(endTime));
+
+            if (endTime <= startTime)
+                return Result.Failure(AuctionErrors.InvalidTimeRange(startTime, endTime));
+
             return Result.Success();
         }
     }
