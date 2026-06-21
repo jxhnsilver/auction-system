@@ -14,11 +14,11 @@ namespace AuctionSystem.Application.Features.Lots.Commands.Create
     {
         public async Task<Result<Guid>> Handle(CreateLotCommand request, CancellationToken cancellationToken)
         {
-            var userId = currentUserProvider.UserId;
-            if (userId is null)
+            var authenticatedUserId = currentUserProvider.UserId;
+            if (authenticatedUserId is null)
                 return Result<Guid>.Failure(SecurityErrors.Unauthorized());
 
-            var lot = Lot.Create(LotId.New(), userId, request.Title);
+            var lot = Lot.Create(LotId.New(), authenticatedUserId, request.Title);
 
             lotRepository.Add(lot);
 

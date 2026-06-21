@@ -14,11 +14,11 @@ namespace AuctionSystem.Application.Features.Lots.Queries.GetMy
     {
         public async Task<Result<IReadOnlyList<LotDto>>> Handle(GetMyLotsQuery request, CancellationToken cancellationToken)
         {
-            var userId = currentUserProvider.UserId;
-            if (userId is null)
+            var authenticatedUserId = currentUserProvider.UserId;
+            if (authenticatedUserId is null)
                 return Result<IReadOnlyList<LotDto>>.Failure(SecurityErrors.Unauthorized());
 
-            var lots = await lotRepository.GetByOwnerAsync(userId, cancellationToken);
+            var lots = await lotRepository.GetByOwnerAsync(authenticatedUserId, cancellationToken);
 
             var lotDtos = lots
                 .Select(l => new LotDto(l.Id.Value, l.OwnerId.Value, l.Title))
