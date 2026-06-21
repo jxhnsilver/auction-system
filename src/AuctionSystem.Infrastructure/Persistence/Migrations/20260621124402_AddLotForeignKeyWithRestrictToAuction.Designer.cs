@@ -3,6 +3,7 @@ using System;
 using AuctionSystem.Infrastructure.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace AuctionSystem.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260621124402_AddLotForeignKeyWithRestrictToAuction")]
+    partial class AddLotForeignKeyWithRestrictToAuction
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -65,9 +68,6 @@ namespace AuctionSystem.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("LotId")
                         .HasDatabaseName("ix_auctions_lot_id");
-
-                    b.HasIndex("SellerId")
-                        .HasDatabaseName("ix_auctions_seller_id");
 
                     b.ToTable("auctions", (string)null);
                 });
@@ -166,13 +166,6 @@ namespace AuctionSystem.Infrastructure.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("fk_auctions_lots_lot_id");
-
-                    b.HasOne("AuctionSystem.Domain.Users.User", null)
-                        .WithMany()
-                        .HasForeignKey("SellerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_auctions_users_seller_id");
                 });
 
             modelBuilder.Entity("AuctionSystem.Domain.Auctions.Bid", b =>

@@ -1,4 +1,5 @@
 using AuctionSystem.Domain.Auctions;
+using AuctionSystem.Domain.Lots;
 using AuctionSystem.Domain.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -24,6 +25,12 @@ namespace AuctionSystem.Infrastructure.Persistence.Configurations
                     value => UserId.From(value))
                 .IsRequired();
 
+            builder.Property(a => a.LotId)
+                .HasConversion(
+                    id => id.Value,
+                    value => LotId.From(value))
+                .IsRequired();
+
             builder.Property(a => a.StartingPrice)
                 .HasPrecision(18, 2)
                 .IsRequired();
@@ -42,6 +49,16 @@ namespace AuctionSystem.Infrastructure.Persistence.Configurations
 
             builder.Property(a => a.EndTime)
                 .IsRequired();
+
+            builder.HasOne<Lot>()
+                .WithMany()
+                .HasForeignKey(a => a.LotId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasOne<User>()
+                .WithMany()
+                .HasForeignKey(a => a.SellerId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasMany(a => a.Bids)
                 .WithOne()
