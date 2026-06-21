@@ -21,5 +21,7 @@
             => new(message, ErrorType.Conflict);
         public static Error Unauthorized(string message)
             => new(message, ErrorType.Unauthorized);
+        public static Error Forbidden(string message)
+            => new(message, ErrorType.Forbidden);
     }
 }
