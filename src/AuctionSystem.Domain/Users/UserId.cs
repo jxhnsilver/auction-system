@@ -1,4 +1,6 @@
-﻿namespace AuctionSystem.Domain.Users
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace AuctionSystem.Domain.Users
 {
     public sealed record UserId
     {
@@ -25,6 +27,18 @@
                 throw new ArgumentException("User ID cannot be empty", nameof(userId));
 
             return new UserId(userId);
+        }
+
+        public static bool TryParse(Guid guid, [NotNullWhen(true)] out UserId? userId)
+        {
+            if (guid == Guid.Empty)
+            {
+                userId = null;
+                return false;
+            }
+
+            userId = new UserId(guid);
+            return true;
         }
     }
 }

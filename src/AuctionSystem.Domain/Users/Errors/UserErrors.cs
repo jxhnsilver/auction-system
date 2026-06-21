@@ -5,12 +5,12 @@ namespace AuctionSystem.Domain.Users.Errors
     public static class UserErrors
     {
         public static Error NotFound(UserId userId) => Error.NotFound(
-            $"The user with the Id = '{userId}' was not found");
+            $"The user with the Id = '{userId.Value}' was not found");
         public static Error NotFound(Email email) => Error.NotFound(
             $"User with email '{email.Value}' was not found");
-        public static Error InvalidCredentials() => Error.Validation(
+        public static readonly Error InvalidCredentials = Error.Validation(
             "Invalid credentials");
-        public static Error EmailNotUnique() => Error.Conflict(
+        public static readonly Error EmailNotUnique = Error.Conflict(
             "The provided email is already taken");
     }
 }

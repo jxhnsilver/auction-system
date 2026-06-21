@@ -1,7 +1,7 @@
 ﻿using AuctionSystem.Domain.Primitives;
 using MediatR;
 
-namespace AuctionSystem.Application.Features.Users.Login
+namespace AuctionSystem.Application.Features.Users.Commands.Login
 {
     public sealed record LoginUserCommand(
         string Email,

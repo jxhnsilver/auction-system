@@ -4,7 +4,7 @@ using AuctionSystem.Domain.Users;
 using AuctionSystem.Domain.Users.Errors;
 using MediatR;
 
-namespace AuctionSystem.Application.Features.Users.Register
+namespace AuctionSystem.Application.Features.Users.Commands.Register
 {
     public class RegisterUserCommandHandler(
         IPasswordHasher passwordHasher,
@@ -19,7 +19,7 @@ namespace AuctionSystem.Application.Features.Users.Register
                 return Result<Guid>.Failure(emailResult.Error);
 
             if (await userRepository.ExistsByEmailAsync(emailResult.Value, cancellationToken))
-                return Result<Guid>.Failure(UserErrors.EmailNotUnique());
+                return Result<Guid>.Failure(UserErrors.EmailNotUnique);
 
             var passwordHash = passwordHasher.Hash(request.Password);
 

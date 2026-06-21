@@ -22,6 +22,115 @@ namespace AuctionSystem.Infrastructure.Persistence.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("AuctionSystem.Domain.Auctions.Auction", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<decimal>("CurrentPrice")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)")
+                        .HasColumnName("current_price");
+
+                    b.Property<DateTime>("EndTime")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("end_time");
+
+                    b.Property<Guid>("LotId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("lot_id");
+
+                    b.Property<Guid>("SellerId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("seller_id");
+
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("start_time");
+
+                    b.Property<decimal>("StartingPrice")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)")
+                        .HasColumnName("starting_price");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)")
+                        .HasColumnName("status");
+
+                    b.HasKey("Id")
+                        .HasName("pk_auctions");
+
+                    b.HasIndex("LotId")
+                        .HasDatabaseName("ix_auctions_lot_id");
+
+                    b.HasIndex("SellerId")
+                        .HasDatabaseName("ix_auctions_seller_id");
+
+                    b.ToTable("auctions", (string)null);
+                });
+
+            modelBuilder.Entity("AuctionSystem.Domain.Auctions.Bid", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<decimal>("Amount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)")
+                        .HasColumnName("amount");
+
+                    b.Property<Guid>("AuctionId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("auction_id");
+
+                    b.Property<Guid>("BidderId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("bidder_id");
+
+                    b.Property<DateTime>("PlacedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("placed_at");
+
+                    b.HasKey("Id")
+                        .HasName("pk_bids");
+
+                    b.HasIndex("AuctionId")
+                        .HasDatabaseName("ix_bids_auction_id");
+
+                    b.ToTable("bids", (string)null);
+                });
+
+            modelBuilder.Entity("AuctionSystem.Domain.Lots.Lot", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<Guid>("OwnerId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("owner_id");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)")
+                        .HasColumnName("status");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("title");
+
+                    b.HasKey("Id")
+                        .HasName("pk_lots");
+
+                    b.ToTable("lots", (string)null);
+                });
+
             modelBuilder.Entity("AuctionSystem.Domain.Users.User", b =>
                 {
                     b.Property<Guid>("Id")
@@ -47,6 +156,38 @@ namespace AuctionSystem.Infrastructure.Persistence.Migrations
                         .HasDatabaseName("ix_users_email");
 
                     b.ToTable("users", (string)null);
+                });
+
+            modelBuilder.Entity("AuctionSystem.Domain.Auctions.Auction", b =>
+                {
+                    b.HasOne("AuctionSystem.Domain.Lots.Lot", null)
+                        .WithMany()
+                        .HasForeignKey("LotId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_auctions_lots_lot_id");
+
+                    b.HasOne("AuctionSystem.Domain.Users.User", null)
+                        .WithMany()
+                        .HasForeignKey("SellerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_auctions_users_seller_id");
+                });
+
+            modelBuilder.Entity("AuctionSystem.Domain.Auctions.Bid", b =>
+                {
+                    b.HasOne("AuctionSystem.Domain.Auctions.Auction", null)
+                        .WithMany("Bids")
+                        .HasForeignKey("AuctionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_bids_auctions_auction_id");
+                });
+
+            modelBuilder.Entity("AuctionSystem.Domain.Auctions.Auction", b =>
+                {
+                    b.Navigation("Bids");
                 });
 #pragma warning restore 612, 618
         }

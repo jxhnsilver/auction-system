@@ -4,7 +4,7 @@ using AuctionSystem.Domain.Users;
 using AuctionSystem.Domain.Users.Errors;
 using MediatR;
 
-namespace AuctionSystem.Application.Features.Users.Login
+namespace AuctionSystem.Application.Features.Users.Commands.Login
 {
     public class LoginUserCommandHandler(
         IUserRepository userRepository,
@@ -21,11 +21,11 @@ namespace AuctionSystem.Application.Features.Users.Login
 
             User? user = await userRepository.GetByEmailAsync(emailResult.Value, cancellationToken);
             if (user is null)
-                return Result<string>.Failure(UserErrors.InvalidCredentials());
+                return Result<string>.Failure(UserErrors.InvalidCredentials);
 
             bool isPasswordValid = passwordHasher.Verify(request.Password, user.PasswordHash);
             if (!isPasswordValid)
-                return Result<string>.Failure(UserErrors.InvalidCredentials());
+                return Result<string>.Failure(UserErrors.InvalidCredentials);
 
             var token = tokenProvider.GenerateAccessToken(user);
 

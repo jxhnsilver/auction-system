@@ -1,4 +1,4 @@
-﻿namespace AuctionSystem.Domain.Primitives
+namespace AuctionSystem.Application.Abstractions
 {
     public interface IClock
     {
