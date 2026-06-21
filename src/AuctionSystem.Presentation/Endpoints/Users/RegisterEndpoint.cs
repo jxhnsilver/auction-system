@@ -1,4 +1,4 @@
-﻿using AuctionSystem.Application.Features.Users.Register;
+﻿using AuctionSystem.Application.Features.Users.Commands.Register;
 using AuctionSystem.Presentation.Helpers;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
@@ -20,8 +20,9 @@ namespace AuctionSystem.Presentation.Endpoints.Users
 
         public void MapEndpoint(IEndpointRouteBuilder app)
         {
-            app.MapPost("api/users/register", (Request request, ISender sender, CancellationToken cancellationToken) 
-                => Register(request, sender, cancellationToken));
+            app.MapPost("api/users/register", (Request request, ISender sender, CancellationToken cancellationToken)
+                => Register(request, sender, cancellationToken))
+                .WithTags("Users");
         }
 
         private static async Task<IResult> Register(Request request, ISender sender, CancellationToken cancellationToken)

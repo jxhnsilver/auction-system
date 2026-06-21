@@ -1,27 +1,27 @@
 using AuctionSystem.Application.Dtos;
-using AuctionSystem.Application.Features.Lots.Queries.GetMy;
+using AuctionSystem.Application.Features.Lots.Queries.GetAll;
 using AuctionSystem.Presentation.Helpers;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 
-namespace AuctionSystem.Presentation.Endpoints.Lots.Me
+namespace AuctionSystem.Presentation.Endpoints.Lots.Public
 {
-    public sealed class GetMyLotsEndpoint : IEndpoint
+    public sealed class GetLotsEndpoint : IEndpoint
     {
         public sealed record Response(IReadOnlyList<LotDto> Lots);
 
         public void MapEndpoint(IEndpointRouteBuilder app)
         {
-            app.MapGet("api/me/lots", (ISender sender, CancellationToken cancellationToken)
-                    => GetMyLots(sender, cancellationToken))
-                .RequireAuthorization();
+            app.MapGet("api/lots", (ISender sender, CancellationToken cancellationToken)
+                    => GetAll(sender, cancellationToken))
+                .WithTags("Lots");
         }
 
-        private static async Task<IResult> GetMyLots(ISender sender, CancellationToken cancellationToken)
+        private static async Task<IResult> GetAll(ISender sender, CancellationToken cancellationToken)
         {
-            var query = new GetMyLotsQuery();
+            var query = new GetLotsQuery();
 
             var result = await sender.Send(query, cancellationToken);
 
