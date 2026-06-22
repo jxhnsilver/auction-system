@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using System.ComponentModel.DataAnnotations;
 
-namespace AuctionSystem.Presentation.Endpoints.Users
+namespace AuctionSystem.Presentation.Endpoints.Users.Public
 {
     public sealed class RegisterEndpoint : IEndpoint
     {
