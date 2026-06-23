@@ -48,7 +48,7 @@ namespace AuctionSystem.Domain.Auctions
             DateTime endTime,
             DateTime now)
         {
-            if (now < startTime)
+            if (now >= startTime)
                 return Result<Auction>.Failure(AuctionErrors.StartTimeCannotBeInPast(startTime));
 
             var validationResult = ValidateCreateInput(sellerId, startingPrice, startTime, endTime);
