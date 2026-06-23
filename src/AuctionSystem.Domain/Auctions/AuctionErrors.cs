@@ -27,5 +27,7 @@ namespace AuctionSystem.Domain.Auctions
             $"Auction cannot be closed before end time. Now: {now}, End: {endTime}");
         public static Error StartTimeCannotBeInPast(DateTime startTime) => Error.Validation(
             $"Start time '{startTime}' cannot be in the past");
+        public static Error StartTimeTooCloseToPresent(DateTime startTime, TimeSpan buffer) => Error.Validation(
+            $"Start time '{startTime}' is too close to the present. Please schedule at least {buffer.TotalSeconds} seconds into the future");
     }
 }
