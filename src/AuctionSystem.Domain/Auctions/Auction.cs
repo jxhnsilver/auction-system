@@ -100,7 +100,6 @@ namespace AuctionSystem.Domain.Auctions
             return Result.Success();
         }
 
-
         public Result<Bid> PlaceBid(UserId bidderId, decimal amount, DateTime now)
         {
             if (bidderId is null)
