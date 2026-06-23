@@ -21,7 +21,7 @@ namespace AuctionSystem.Application.Features.Lots.Queries.GetMy
             var lots = await lotRepository.GetByOwnerAsync(authenticatedUserId, cancellationToken);
 
             var lotDtos = lots
-                .Select(l => new LotDto(l.Id.Value, l.OwnerId.Value, l.Title))
+                .Select(l => new LotDto(l.Id.Value, l.OwnerId.Value, l.Title, l.Status.ToString()))
                 .ToList()
                 .AsReadOnly();
 
