@@ -6,6 +6,9 @@ namespace AuctionSystem.Domain.Auctions
 {
     public sealed class Auction : AggregateRoot<AuctionId>
     {
+        // Time buffer for safe scheduling of auctions to avoid scheduling in the past due to clock skew or processing delays
+        private static readonly TimeSpan MinimumSchedulingBuffer = TimeSpan.FromSeconds(30);
+
         private readonly List<Bid> _bids = [];
 
         public UserId SellerId { get; private set; }
@@ -48,8 +51,16 @@ namespace AuctionSystem.Domain.Auctions
             DateTime endTime,
             DateTime now)
         {
-            if (now >= startTime)
-                return Result<Auction>.Failure(AuctionErrors.StartTimeCannotBeInPast(startTime));
+            TimeSpan timeUntilStart = startTime - now;
+
+            if (timeUntilStart < MinimumSchedulingBuffer)
+            {
+                var error = timeUntilStart < TimeSpan.Zero
+                    ? AuctionErrors.StartTimeCannotBeInPast(startTime)
+                    : AuctionErrors.StartTimeTooCloseToPresent(startTime, MinimumSchedulingBuffer);
+
+                return Result<Auction>.Failure(error);
+            }
 
             var validationResult = ValidateCreateInput(sellerId, startingPrice, startTime, endTime);
             if (validationResult.IsFailure)
