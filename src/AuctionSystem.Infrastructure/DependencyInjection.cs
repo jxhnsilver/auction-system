@@ -1,10 +1,10 @@
 ﻿using AuctionSystem.Application.Abstractions;
-using AuctionSystem.Domain.Lots;
-using AuctionSystem.Domain.Primitives;
 using AuctionSystem.Domain.Auctions;
+using AuctionSystem.Domain.Lots;
 using AuctionSystem.Domain.Users;
 using AuctionSystem.Infrastructure.Authentication;
 using AuctionSystem.Infrastructure.Authentication.Jwt;
+using AuctionSystem.Infrastructure.BackgroundServices;
 using AuctionSystem.Infrastructure.Extensions;
 using AuctionSystem.Infrastructure.Persistence.Context;
 using AuctionSystem.Infrastructure.Persistence.Repositories;
@@ -43,6 +43,9 @@ namespace AuctionSystem.Infrastructure
             services.AddScoped<ICurrentUserProvider, CurrentUserProvider>();
 
             services.AddSingleton<IClock, SystemClock>();
+
+            services.AddHostedService<ExpiredAuctionCloserWorker>();
+            services.AddHostedService<ScheduledAuctionOpenerWorker>();
 
             return services;
         }
