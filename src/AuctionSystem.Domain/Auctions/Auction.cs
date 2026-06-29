@@ -43,48 +43,35 @@ namespace AuctionSystem.Domain.Auctions
             EndTime = endTime;
         }
 
-        public Result Open(DateTime now)
-        {
-            if (Status != AuctionStatus.Scheduled)
-                return Result.Failure(AuctionErrors.InvalidStatus(Status, AuctionStatus.Scheduled));
-
-            if (now < StartTime)
-                return Result.Failure(AuctionErrors.NotStarted(StartTime, now));
-
-            Status = AuctionStatus.Active;
-
-            return Result.Success();
-        }
-
-        public Result<Bid> PlaceBid(UserId bidderId, decimal amount, DateTime now)
+        public Result PlaceBid(UserId bidderId, decimal amount, DateTime now)
         {
             if (bidderId is null)
                 throw new ArgumentNullException(nameof(bidderId));
 
             if (Status != AuctionStatus.Active)
-                return Result<Bid>.Failure(AuctionErrors.InvalidStatus(Status, AuctionStatus.Active));
+                return Result.Failure(AuctionErrors.InvalidStatus(Status, AuctionStatus.Active));
 
             if (now < StartTime || now > EndTime)
-                return Result<Bid>.Failure(AuctionErrors.NotInBiddingWindow(now, StartTime, EndTime));
+                return Result.Failure(AuctionErrors.NotInBiddingWindow(now, StartTime, EndTime));
 
             if (bidderId == SellerId)
-                return Result<Bid>.Failure(AuctionErrors.SellerCannotBid());
+                return Result.Failure(AuctionErrors.SellerCannotBid());
 
             if (_bids.Count > 0 && amount <= CurrentPrice)
-                return Result<Bid>.Failure(AuctionErrors.MustExceedCurrentPrice(amount, CurrentPrice));
+                return Result.Failure(AuctionErrors.MustExceedCurrentPrice(amount, CurrentPrice));
 
             if (_bids.Count == 0 && amount < StartingPrice)
-                return Result<Bid>.Failure(AuctionErrors.MustMeetStartingPrice(amount, StartingPrice));
+                return Result.Failure(AuctionErrors.MustMeetStartingPrice(amount, StartingPrice));
 
             var bidResult = Bid.Create(Id, bidderId, amount, now);
             if (bidResult.IsFailure)
-                return Result<Bid>.Failure(bidResult.Error);
+                return Result.Failure(bidResult.Error);
 
             var bid = bidResult.Value;
             _bids.Add(bid);
             CurrentPrice = amount;
 
-            return Result<Bid>.Success(bid);
+            return Result.Success();
         }
 
         public Result Cancel(DateTime now)

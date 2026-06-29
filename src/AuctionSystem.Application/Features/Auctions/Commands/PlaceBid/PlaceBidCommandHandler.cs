@@ -29,11 +29,14 @@ namespace AuctionSystem.Application.Features.Auctions.Commands.PlaceBid
             if (auction.SellerId == bidderId)
                 return Result.Failure(AuctionErrors.SellerCannotBid());
 
-            var bidResult = auction.PlaceBid(bidderId, request.Amount, clock.UtcNow);
+            var now = clock.UtcNow;
+
+            var bidResult = auction.PlaceBid(bidderId, request.Amount, now);
             if (bidResult.IsFailure)
-                return Result.Failure(bidResult.Error);
+                return bidResult;
 
             await uow.SaveChangesAsync(cancellationToken);
+
             return Result.Success();
         }
     }
