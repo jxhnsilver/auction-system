@@ -1,5 +1,6 @@
 using AuctionSystem.Application.Abstractions;
 using AuctionSystem.Domain.Auctions;
+using AuctionSystem.Domain.Factories;
 using AuctionSystem.Domain.Lots;
 using AuctionSystem.Domain.Primitives;
 using AuctionSystem.Domain.Security;
@@ -11,7 +12,7 @@ namespace AuctionSystem.Application.Features.Auctions.Commands.CreateNow
         ICurrentUserProvider currentUserProvider,
         IAuctionRepository auctionRepository,
         ILotRepository lotRepository,
-        IClock clock,
+        IAuctionFactory auctionFactory,
         IUnitOfWork uow)
         : IRequestHandler<CreateNowAuctionCommand, Result<Guid>>
     {
@@ -28,10 +29,12 @@ namespace AuctionSystem.Application.Features.Auctions.Commands.CreateNow
             if (lot is null)
                 return Result<Guid>.Failure(LotErrors.NotFound(lotId));
 
-            if (lot.OwnerId != sellerId)
-                return Result<Guid>.Failure(SecurityErrors.Forbidden());
+            var auctionResult = auctionFactory.CreateNow(
+                sellerId,
+                lot,
+                request.StartingPrice,
+                request.EndTime);
 
-            var auctionResult = Auction.CreateNow(sellerId, lotId, request.StartingPrice, clock.UtcNow, request.EndTime);
             if (auctionResult.IsFailure)
                 return Result<Guid>.Failure(auctionResult.Error);
 
