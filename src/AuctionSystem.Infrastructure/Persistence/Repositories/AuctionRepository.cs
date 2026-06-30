@@ -1,4 +1,4 @@
-using AuctionSystem.Domain.Auctions;
+using AuctionSystem.Domain.Aggregates.Auctions;
 using AuctionSystem.Infrastructure.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
 

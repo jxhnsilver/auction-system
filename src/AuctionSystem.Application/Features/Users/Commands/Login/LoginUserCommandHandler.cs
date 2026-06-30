@@ -1,7 +1,7 @@
 ﻿using AuctionSystem.Application.Abstractions;
+using AuctionSystem.Domain.Aggregates.Users;
+using AuctionSystem.Domain.Aggregates.Users.Errors;
 using AuctionSystem.Domain.Primitives;
-using AuctionSystem.Domain.Users;
-using AuctionSystem.Domain.Users.Errors;
 using MediatR;
 
 namespace AuctionSystem.Application.Features.Users.Commands.Login

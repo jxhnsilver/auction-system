@@ -1,7 +1,7 @@
-﻿using AuctionSystem.Domain.Primitives;
-using AuctionSystem.Domain.Users;
+﻿using AuctionSystem.Domain.Aggregates.Users;
+using AuctionSystem.Domain.Primitives;
 
-namespace AuctionSystem.Domain.Lots
+namespace AuctionSystem.Domain.Aggregates.Lots
 {
     public sealed class Lot : AggregateRoot<LotId>
     {

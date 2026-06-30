@@ -1,4 +1,6 @@
 ﻿using AuctionSystem.Application.Features.Auctions.Services;
+using AuctionSystem.Domain.Aggregates.Auctions;
+using AuctionSystem.Domain.Factories;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace AuctionSystem.Application
@@ -11,6 +13,8 @@ namespace AuctionSystem.Application
 
             services.AddScoped<IExpiredAuctionCloser, ExpiredAuctionCloser>();
             services.AddScoped<IScheduledAuctionOpener, ScheduledAuctionOpener>();
+
+            services.AddScoped<IAuctionFactory, AuctionFactory>();
 
             return services;
         }

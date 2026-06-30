@@ -1,6 +1,6 @@
 using AuctionSystem.Application.Abstractions;
-using AuctionSystem.Domain.Auctions;
-using AuctionSystem.Domain.Lots;
+using AuctionSystem.Domain.Aggregates.Auctions;
+using AuctionSystem.Domain.Aggregates.Lots;
 using AuctionSystem.Domain.Primitives;
 using AuctionSystem.Domain.Security;
 using MediatR;
@@ -11,7 +11,7 @@ namespace AuctionSystem.Application.Features.Auctions.Commands.CreateScheduled
         ICurrentUserProvider currentUserProvider,
         IAuctionRepository auctionRepository,
         ILotRepository lotRepository,
-        IClock clock,
+        IAuctionFactory auctionFactory,
         IUnitOfWork uow)
         : IRequestHandler<CreateScheduledAuctionCommand, Result<Guid>>
     {
@@ -29,12 +29,13 @@ namespace AuctionSystem.Application.Features.Auctions.Commands.CreateScheduled
             if (lot is null)
                 return Result<Guid>.Failure(LotErrors.NotFound(lotId));
 
-            if (lot.OwnerId != sellerId)
-                return Result<Guid>.Failure(SecurityErrors.Forbidden());
+            var auctionResult = auctionFactory.CreateScheduled(
+                sellerId, 
+                lot, 
+                request.StartingPrice, 
+                request.StartTime, 
+                request.EndTime);
 
-            var now = clock.UtcNow;
-
-            var auctionResult = Auction.CreateScheduled(sellerId, lotId, request.StartingPrice, request.StartTime, request.EndTime, now);
             if (auctionResult.IsFailure)
                 return Result<Guid>.Failure(auctionResult.Error);
 

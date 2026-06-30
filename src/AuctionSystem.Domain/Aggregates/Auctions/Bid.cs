@@ -1,7 +1,7 @@
-﻿using AuctionSystem.Domain.Primitives;
-using AuctionSystem.Domain.Users;
+﻿using AuctionSystem.Domain.Aggregates.Users;
+using AuctionSystem.Domain.Primitives;
 
-namespace AuctionSystem.Domain.Auctions
+namespace AuctionSystem.Domain.Aggregates.Auctions
 {
     public sealed class Bid : Entity<BidId>
     {

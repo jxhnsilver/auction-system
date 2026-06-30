@@ -1,6 +1,6 @@
 using AuctionSystem.Domain.Primitives;
 
-namespace AuctionSystem.Domain.Auctions
+namespace AuctionSystem.Domain.Aggregates.Auctions
 {
     public static class BidErrors
     {

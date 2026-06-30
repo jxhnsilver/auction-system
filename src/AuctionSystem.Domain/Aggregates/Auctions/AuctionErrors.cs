@@ -1,6 +1,7 @@
 using AuctionSystem.Domain.Primitives;
+using System.Diagnostics;
 
-namespace AuctionSystem.Domain.Auctions
+namespace AuctionSystem.Domain.Aggregates.Auctions
 {
     public static class AuctionErrors
     {
@@ -29,5 +30,8 @@ namespace AuctionSystem.Domain.Auctions
             $"Start time '{startTime}' cannot be in the past");
         public static Error StartTimeTooCloseToPresent(DateTime startTime, TimeSpan buffer) => Error.Validation(
             $"Start time '{startTime}' is too close to the present. Please schedule at least {buffer.TotalSeconds} seconds into the future");
+        public static Error AlreadyClosed() => Error.Conflict("Cannot cancel an auction that is already closed");
+        public static Error CannotCancelWithBids() => Error.Conflict("Cannot cancel an auction that has bids");
+        public static Error AlreadyCancelled() => Error.Conflict("Cannot cancel an auction that is already cancelled");
     }
 }

@@ -1,6 +1,6 @@
 ﻿using AuctionSystem.Domain.Primitives;
 
-namespace AuctionSystem.Domain.Users
+namespace AuctionSystem.Domain.Aggregates.Users
 {
     public sealed class User : AggregateRoot<UserId>
     {
