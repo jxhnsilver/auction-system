@@ -1,5 +1,5 @@
 ﻿using AuctionSystem.Application.Abstractions;
-using AuctionSystem.Domain.Users;
+using AuctionSystem.Domain.Aggregates.Users;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;

@@ -1,4 +1,4 @@
-﻿namespace AuctionSystem.Domain.Lots
+﻿namespace AuctionSystem.Domain.Aggregates.Lots
 {
     public enum LotStatus
     {

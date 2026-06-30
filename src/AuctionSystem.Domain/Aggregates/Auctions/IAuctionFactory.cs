@@ -1,8 +1,8 @@
-﻿using AuctionSystem.Domain.Lots;
+﻿using AuctionSystem.Domain.Aggregates.Lots;
+using AuctionSystem.Domain.Aggregates.Users;
 using AuctionSystem.Domain.Primitives;
-using AuctionSystem.Domain.Users;
 
-namespace AuctionSystem.Domain.Auctions
+namespace AuctionSystem.Domain.Aggregates.Auctions
 {
     public interface IAuctionFactory
     {

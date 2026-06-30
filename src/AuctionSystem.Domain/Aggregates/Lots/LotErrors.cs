@@ -1,6 +1,6 @@
 ﻿using AuctionSystem.Domain.Primitives;
 
-namespace AuctionSystem.Domain.Lots
+namespace AuctionSystem.Domain.Aggregates.Lots
 {
     public static class LotErrors
     {

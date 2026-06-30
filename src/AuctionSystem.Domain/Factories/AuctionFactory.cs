@@ -1,8 +1,8 @@
-﻿using AuctionSystem.Domain.Auctions;
-using AuctionSystem.Domain.Lots;
+﻿using AuctionSystem.Domain.Aggregates.Auctions;
+using AuctionSystem.Domain.Aggregates.Lots;
+using AuctionSystem.Domain.Aggregates.Users;
 using AuctionSystem.Domain.Primitives;
 using AuctionSystem.Domain.Security;
-using AuctionSystem.Domain.Users;
 
 namespace AuctionSystem.Domain.Factories
 {

@@ -1,7 +1,7 @@
 using AuctionSystem.Domain.Primitives;
 using System.Diagnostics;
 
-namespace AuctionSystem.Domain.Auctions
+namespace AuctionSystem.Domain.Aggregates.Auctions
 {
     public static class AuctionErrors
     {

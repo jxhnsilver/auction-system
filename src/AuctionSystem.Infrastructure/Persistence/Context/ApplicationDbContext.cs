@@ -1,7 +1,7 @@
 ﻿using AuctionSystem.Application.Abstractions;
-using AuctionSystem.Domain.Auctions;
-using AuctionSystem.Domain.Lots;
-using AuctionSystem.Domain.Users;
+using AuctionSystem.Domain.Aggregates.Auctions;
+using AuctionSystem.Domain.Aggregates.Lots;
+using AuctionSystem.Domain.Aggregates.Users;
 using Microsoft.EntityFrameworkCore;
 
 namespace AuctionSystem.Infrastructure.Persistence.Context

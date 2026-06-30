@@ -1,6 +1,6 @@
-using AuctionSystem.Domain.Users;
+using AuctionSystem.Domain.Aggregates.Users;
 
-namespace AuctionSystem.Domain.Lots
+namespace AuctionSystem.Domain.Aggregates.Lots
 {
     public interface ILotRepository
     {

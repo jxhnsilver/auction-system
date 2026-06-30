@@ -1,8 +1,8 @@
-﻿using AuctionSystem.Domain.Primitives;
-using AuctionSystem.Domain.Users.Errors;
+﻿using AuctionSystem.Domain.Aggregates.Users.Errors;
+using AuctionSystem.Domain.Primitives;
 using System.Text.RegularExpressions;
 
-namespace AuctionSystem.Domain.Users
+namespace AuctionSystem.Domain.Aggregates.Users
 {
     public sealed record Email
     {

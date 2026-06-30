@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace AuctionSystem.Domain.Auctions
+namespace AuctionSystem.Domain.Aggregates.Auctions
 {
     public sealed record AuctionId
     {

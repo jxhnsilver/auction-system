@@ -1,4 +1,4 @@
-﻿using AuctionSystem.Domain.Auctions;
+﻿using AuctionSystem.Domain.Aggregates.Auctions;
 using AuctionSystem.Domain.Primitives;
 using Microsoft.Extensions.Logging;
 

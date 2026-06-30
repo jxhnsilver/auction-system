@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace AuctionSystem.Domain.Users
+namespace AuctionSystem.Domain.Aggregates.Users
 {
     public sealed record UserId
     {

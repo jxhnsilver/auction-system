@@ -1,5 +1,5 @@
 ﻿using AuctionSystem.Application.Features.Auctions.Services;
-using AuctionSystem.Domain.Auctions;
+using AuctionSystem.Domain.Aggregates.Auctions;
 using AuctionSystem.Domain.Factories;
 using Microsoft.Extensions.DependencyInjection;
 

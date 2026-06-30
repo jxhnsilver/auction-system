@@ -1,4 +1,4 @@
-﻿namespace AuctionSystem.Domain.Users
+﻿namespace AuctionSystem.Domain.Aggregates.Users
 {
     public interface IUserRepository
     {

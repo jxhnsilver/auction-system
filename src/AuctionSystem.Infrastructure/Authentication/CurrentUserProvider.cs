@@ -1,5 +1,5 @@
 ﻿using AuctionSystem.Application.Abstractions;
-using AuctionSystem.Domain.Users;
+using AuctionSystem.Domain.Aggregates.Users;
 using Microsoft.AspNetCore.Http;
 
 namespace AuctionSystem.Infrastructure.Authentication

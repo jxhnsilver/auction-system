@@ -1,5 +1,5 @@
-using AuctionSystem.Domain.Auctions;
-using AuctionSystem.Domain.Users;
+using AuctionSystem.Domain.Aggregates.Auctions;
+using AuctionSystem.Domain.Aggregates.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

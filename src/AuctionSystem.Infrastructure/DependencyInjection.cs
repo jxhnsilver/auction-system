@@ -1,8 +1,8 @@
 ﻿using AuctionSystem.Application.Abstractions;
-using AuctionSystem.Domain.Auctions;
-using AuctionSystem.Domain.Lots;
+using AuctionSystem.Domain.Aggregates.Auctions;
+using AuctionSystem.Domain.Aggregates.Lots;
+using AuctionSystem.Domain.Aggregates.Users;
 using AuctionSystem.Domain.Primitives;
-using AuctionSystem.Domain.Users;
 using AuctionSystem.Infrastructure.Authentication;
 using AuctionSystem.Infrastructure.Authentication.Jwt;
 using AuctionSystem.Infrastructure.BackgroundServices;
