@@ -1,5 +1,4 @@
 using AuctionSystem.Domain.Primitives;
-using System.Diagnostics;
 
 namespace AuctionSystem.Domain.Aggregates.Auctions
 {

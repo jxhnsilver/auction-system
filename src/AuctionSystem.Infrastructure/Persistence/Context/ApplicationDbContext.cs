@@ -2,6 +2,7 @@
 using AuctionSystem.Domain.Aggregates.Auctions;
 using AuctionSystem.Domain.Aggregates.Lots;
 using AuctionSystem.Domain.Aggregates.Users;
+using AuctionSystem.Domain.Aggregates.Wallets;
 using Microsoft.EntityFrameworkCore;
 
 namespace AuctionSystem.Infrastructure.Persistence.Context
@@ -12,6 +13,8 @@ namespace AuctionSystem.Infrastructure.Persistence.Context
         public DbSet<Bid> Bids { get; set; }
         public DbSet<Lot> Lots { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<Wallet> Wallets { get; set; }
+        public DbSet<WalletHold> WalletHolds { get; set; }
 
         public ApplicationDbContext(DbContextOptions options)
             : base(options) { }
