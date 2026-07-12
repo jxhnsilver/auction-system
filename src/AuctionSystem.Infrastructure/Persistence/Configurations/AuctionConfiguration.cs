@@ -67,6 +67,10 @@ namespace AuctionSystem.Infrastructure.Persistence.Configurations
 
             builder.Navigation(a => a.Bids)
                 .HasField("_bids");
+
+            builder.Property<byte[]>("RowVersion")
+                .IsRowVersion()
+                .IsRequired();
         }
     }
 }
