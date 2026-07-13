@@ -42,6 +42,10 @@ namespace AuctionSystem.Infrastructure.Persistence.Configurations
 
             builder.Navigation(w => w.Holds)
                 .HasField("_holds");
+
+            builder.Property<byte[]>("RowVersion")
+                .IsRowVersion()
+                .IsRequired();
         }
     }
 }

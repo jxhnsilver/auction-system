@@ -2,6 +2,7 @@
 using AuctionSystem.Domain.Aggregates.Auctions;
 using AuctionSystem.Domain.Aggregates.Lots;
 using AuctionSystem.Domain.Aggregates.Users;
+using AuctionSystem.Domain.Aggregates.Wallets;
 using AuctionSystem.Domain.Primitives;
 using AuctionSystem.Infrastructure.Authentication;
 using AuctionSystem.Infrastructure.Authentication.Jwt;
@@ -33,6 +34,7 @@ namespace AuctionSystem.Infrastructure
             services.AddScoped<IAuctionRepository, AuctionRepository>();
             services.AddScoped<ILotRepository, LotRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IWalletRepository, WalletRepository>();
 
             services.AddSingleton<IPasswordHasher, PasswordHasher>();
 
