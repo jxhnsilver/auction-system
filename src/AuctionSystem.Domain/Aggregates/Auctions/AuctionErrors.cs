@@ -32,5 +32,6 @@ namespace AuctionSystem.Domain.Aggregates.Auctions
         public static Error AlreadyClosed() => Error.Conflict("Cannot cancel an auction that is already closed");
         public static Error CannotCancelWithBids() => Error.Conflict("Cannot cancel an auction that has bids");
         public static Error AlreadyCancelled() => Error.Conflict("Cannot cancel an auction that is already cancelled");
+        public static Error CannotOutbidYourself() => Error.Conflict("Cannot outbid your own highest bid");
     }
 }
