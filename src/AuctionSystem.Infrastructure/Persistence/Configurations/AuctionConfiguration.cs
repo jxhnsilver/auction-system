@@ -35,6 +35,11 @@ namespace AuctionSystem.Infrastructure.Persistence.Configurations
                 .HasPrecision(18, 2)
                 .IsRequired();
 
+            builder.Property(a => a.LastBidderId)
+                .HasConversion(
+                    id => id.Value,
+                    value => UserId.From(value));
+
             builder.Property(a => a.CurrentPrice)
                 .HasPrecision(18, 2)
                 .IsRequired();
@@ -67,6 +72,10 @@ namespace AuctionSystem.Infrastructure.Persistence.Configurations
 
             builder.Navigation(a => a.Bids)
                 .HasField("_bids");
+
+            builder.Property<byte[]>("RowVersion")
+                .IsRowVersion()
+                .IsRequired();
         }
     }
 }

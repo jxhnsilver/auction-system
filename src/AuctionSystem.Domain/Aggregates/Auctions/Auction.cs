@@ -13,6 +13,7 @@ namespace AuctionSystem.Domain.Aggregates.Auctions
 
         public UserId SellerId { get; private set; }
         public LotId LotId { get; private set; }
+        public UserId? LastBidderId { get; private set; }
         public decimal StartingPrice { get; private set; }
         public decimal CurrentPrice { get; private set; }
         public AuctionStatus Status { get; private set; }
@@ -38,6 +39,7 @@ namespace AuctionSystem.Domain.Aggregates.Auctions
             LotId = lotId;
             StartingPrice = startingPrice;
             CurrentPrice = startingPrice;
+            LastBidderId = null;
             Status = status;
             StartTime = startTime;
             EndTime = endTime;
@@ -51,16 +53,19 @@ namespace AuctionSystem.Domain.Aggregates.Auctions
             if (Status != AuctionStatus.Active)
                 return Result.Failure(AuctionErrors.InvalidStatus(Status, AuctionStatus.Active));
 
+            if (LastBidderId == bidderId)
+                return Result.Failure(AuctionErrors.CannotOutbidYourself());
+
             if (now < StartTime || now > EndTime)
                 return Result.Failure(AuctionErrors.NotInBiddingWindow(now, StartTime, EndTime));
 
             if (bidderId == SellerId)
                 return Result.Failure(AuctionErrors.SellerCannotBid());
 
-            if (_bids.Count > 0 && amount <= CurrentPrice)
+            if (LastBidderId is not null && amount <= CurrentPrice)
                 return Result.Failure(AuctionErrors.MustExceedCurrentPrice(amount, CurrentPrice));
 
-            if (_bids.Count == 0 && amount < StartingPrice)
+            if (LastBidderId is null && amount < StartingPrice)
                 return Result.Failure(AuctionErrors.MustMeetStartingPrice(amount, StartingPrice));
 
             var bidResult = Bid.Create(Id, bidderId, amount, now);
@@ -69,6 +74,8 @@ namespace AuctionSystem.Domain.Aggregates.Auctions
 
             var bid = bidResult.Value;
             _bids.Add(bid);
+
+            LastBidderId = bidderId;
             CurrentPrice = amount;
 
             return Result.Success();

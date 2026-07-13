@@ -4,6 +4,8 @@ using AuctionSystem.Domain.Aggregates.Lots;
 using AuctionSystem.Domain.Aggregates.Users;
 using AuctionSystem.Domain.Aggregates.Wallets;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
+using System.Data.Common;
 
 namespace AuctionSystem.Infrastructure.Persistence.Context
 {
@@ -22,6 +24,13 @@ namespace AuctionSystem.Infrastructure.Persistence.Context
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
+        }
+
+        public async Task<DbTransaction> BeginTransactionAsync(CancellationToken cancellationToken)
+        {
+            var transaction = await Database.BeginTransactionAsync(cancellationToken);
+
+            return transaction.GetDbTransaction();
         }
     }
 }

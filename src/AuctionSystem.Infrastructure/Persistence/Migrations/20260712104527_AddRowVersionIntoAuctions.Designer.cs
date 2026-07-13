@@ -3,6 +3,7 @@ using System;
 using AuctionSystem.Infrastructure.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace AuctionSystem.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260712104527_AddRowVersionIntoAuctions")]
+    partial class AddRowVersionIntoAuctions
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,10 +39,6 @@ namespace AuctionSystem.Infrastructure.Persistence.Migrations
                     b.Property<DateTime>("EndTime")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("end_time");
-
-                    b.Property<Guid?>("LastBidderId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("last_bidder_id");
 
                     b.Property<Guid>("LotId")
                         .HasColumnType("uuid")
@@ -188,13 +187,6 @@ namespace AuctionSystem.Infrastructure.Persistence.Migrations
                     b.Property<Guid>("OwnerId")
                         .HasColumnType("uuid")
                         .HasColumnName("owner_id");
-
-                    b.Property<byte[]>("RowVersion")
-                        .IsConcurrencyToken()
-                        .IsRequired()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("bytea")
-                        .HasColumnName("row_version");
 
                     b.HasKey("Id")
                         .HasName("pk_wallets");
