@@ -74,5 +74,15 @@ namespace AuctionSystem.Infrastructure.Persistence.Repositories
                 .Select(a => a.Id)
                 .ToListAsync(cancellationToken);
         }
+
+        /// <summary>
+        /// Retrieves auction with pessimistic lock (FOR UPDATE) to prevent concurrent bid conflicts.
+        /// </summary>
+        public async Task<Auction?> GetByIdForUpdateAsync(AuctionId auctionId, CancellationToken cancellationToken)
+        {
+            return await context.Auctions
+                .FromSql($"SELECT * FROM auctions WHERE id = {auctionId.Value} FOR UPDATE")
+                .SingleOrDefaultAsync(cancellationToken);
+        }
     }
 }

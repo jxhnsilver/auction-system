@@ -5,7 +5,6 @@ using AuctionSystem.Domain.Aggregates.Wallets;
 using AuctionSystem.Domain.Primitives;
 using AuctionSystem.Domain.Security;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace AuctionSystem.Application.Features.Auctions.Commands.PlaceBid
@@ -19,8 +18,6 @@ namespace AuctionSystem.Application.Features.Auctions.Commands.PlaceBid
         ILogger<PlaceBidCommandHandler> logger)
         : IRequestHandler<PlaceBidCommand, Result>
     {
-        private const int MaxConcurrencyAttempts = 3;
-
         public async Task<Result> Handle(PlaceBidCommand request, CancellationToken cancellationToken)
         {
             if (!AuctionId.TryParse(request.AuctionId, out var auctionId))
@@ -30,72 +27,59 @@ namespace AuctionSystem.Application.Features.Auctions.Commands.PlaceBid
             if (currentBidderId is null)
                 return Result.Failure(SecurityErrors.Unauthorized());
 
-            var now = clock.UtcNow;
-
-            for (int attempt = 1; attempt <= MaxConcurrencyAttempts; attempt++)
+            await using var transaction = await uow.BeginTransactionAsync(cancellationToken);
+            try
             {
-                await using var transaction = await uow.BeginTransactionAsync(cancellationToken);
-                try
-                {
-                    var result = await ProcessPlaceBidAsync(
-                        auctionId, 
-                        currentBidderId, 
-                        request.Amount, 
-                        now, 
-                        cancellationToken);
+                var now = clock.UtcNow;
 
-                    if (result.IsFailure)
-                    {
-                        await transaction.RollbackAsync();
-                        return result;
-                    }
+                var result = await ProcessPlaceBidAsync(
+                    auctionId,
+                    currentBidderId,
+                    request.Amount,
+                    now,
+                    cancellationToken);
 
-                    await uow.SaveChangesAsync(cancellationToken);
-                    await transaction.CommitAsync();
-
-                    logger.LogInformation(
-                            "Bid placed successfully for auction {AuctionId} by user {UserId}. Amount: {Amount}",
-                            auctionId.Value,
-                            currentBidderId.Value,
-                            request.Amount);
-
-                    return Result.Success();
-                }
-                catch (DbUpdateConcurrencyException ex)
+                if (result.IsFailure)
                 {
                     await transaction.RollbackAsync();
-
-                    logger.LogWarning(
-                            ex,
-                            "Concurrency conflict while user {UserId} placing bid for auction {AuctionId}",
-                            currentBidderId.Value,
-                            auctionId.Value);
-
-                    if (attempt == MaxConcurrencyAttempts)
-                        return Result.Failure(Error.Conflict("The auction was updated by another process. Please try again"));
+                    return result;
                 }
-                catch (Exception ex) 
-                {
-                    await transaction.RollbackAsync();
 
-                    logger.LogError(ex, "Unexpected error while placing bid for auction {AuctionId}", auctionId.Value);
+                await uow.SaveChangesAsync(cancellationToken);
+                await transaction.CommitAsync();
 
-                    throw;
-                }
+                logger.LogInformation(
+                        "Bid placed successfully for auction {AuctionId} by user {UserId}. Amount: {Amount}",
+                        auctionId.Value,
+                        currentBidderId.Value,
+                        request.Amount);
+
+                return Result.Success();
             }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
 
-            return Result.Success();
+                logger.LogError(ex, "Unexpected error while placing bid for auction {AuctionId}", auctionId.Value);
+
+                throw;
+            }
         }
 
+        /// <summary>
+        /// Places bid with pessimistic lock to ensure sequential bid updates.
+        /// Freezes current bidder's funds and unfreezes previous bidder's funds.
+        /// </summary>
         private async Task<Result> ProcessPlaceBidAsync(
-            AuctionId auctionId, 
+            AuctionId auctionId,
             UserId currentBidderId,
             decimal amount,
             DateTime now,
             CancellationToken cancellationToken
             )
         {
-            var auction = await auctionRepository.GetByIdAsync(auctionId, cancellationToken);
+            // Acquire pessimistic lock to prevent concurrent bid race conditions
+            var auction = await auctionRepository.GetByIdForUpdateAsync(auctionId, cancellationToken);
             if (auction is null)
                 return Result.Failure(AuctionErrors.NotFound(auctionId));
 

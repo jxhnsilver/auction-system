@@ -20,12 +20,8 @@ namespace AuctionSystem.Domain.Aggregates.Users
         /// Creates an user identifier from an existing GUID value.
         /// </summary>
         /// <param name="userId">The GUID value.</param>
-        /// <exception cref="ArgumentException">Thrown when the GUID is empty.</exception>
         public static UserId From(Guid userId)
         {
-            if (userId == Guid.Empty)
-                throw new ArgumentException("User ID cannot be empty", nameof(userId));
-
             return new UserId(userId);
         }
 

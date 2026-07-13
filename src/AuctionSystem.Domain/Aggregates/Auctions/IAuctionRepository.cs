@@ -4,6 +4,7 @@ namespace AuctionSystem.Domain.Aggregates.Auctions
     {
         void Add(Auction auction);
         Task<Auction?> GetByIdAsync(AuctionId auctionId, CancellationToken cancellationToken);
+        Task<Auction?> GetByIdForUpdateAsync(AuctionId auctionId, CancellationToken cancellationToken);
         Task<Auction?> GetByIdWithBidsAsync(AuctionId auctionId, CancellationToken cancellationToken);
         Task<IReadOnlyList<Auction>> GetAllAsync(CancellationToken cancellationToken);
         Task<IReadOnlyList<AuctionId>> GetExpiredIdsAsync(DateTime now, CancellationToken cancellationToken);
