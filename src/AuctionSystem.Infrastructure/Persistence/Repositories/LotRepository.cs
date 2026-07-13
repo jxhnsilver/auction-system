@@ -22,7 +22,6 @@ namespace AuctionSystem.Infrastructure.Persistence.Repositories
         public async Task<Lot?> GetByIdAsync(LotId lotId, CancellationToken cancellationToken)
         {
             return await context.Lots
-                .AsNoTracking()
                 .SingleOrDefaultAsync(l => l.Id == lotId, cancellationToken);
         }
 

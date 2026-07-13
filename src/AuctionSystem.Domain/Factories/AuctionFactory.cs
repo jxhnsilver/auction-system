@@ -31,6 +31,8 @@ namespace AuctionSystem.Domain.Factories
                 endTime, 
                 AuctionStatus.Active);
 
+            lot.MarkAsLocked();
+
             return Result<Auction>.Success(auction);
         }
 
@@ -54,6 +56,8 @@ namespace AuctionSystem.Domain.Factories
                 startTime, 
                 endTime, 
                 AuctionStatus.Scheduled);
+
+            lot.MarkAsLocked();
 
             return Result<Auction>.Success(auction);
         }
