@@ -108,6 +108,16 @@ namespace AuctionSystem.Domain.Aggregates.Wallets
             return Result.Success();
         }
 
+        public Result Deposit(decimal amount)
+        {
+            if (amount <= 0)
+                return Result.Failure(WalletErrors.InvalidAmount(amount));
+
+            Balance += amount;
+
+            return Result.Success();
+        }
+
         private WalletHold? GetActiveHold(AuctionId auctionId)
             => _holds.FirstOrDefault(hold => hold.AuctionId == auctionId && hold.Status == WalletHoldStatus.Active);
     }

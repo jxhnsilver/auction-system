@@ -6,4 +6,7 @@
     <Project Path="src/AuctionSystem.Infrastructure/AuctionSystem.Infrastructure.csproj" Id="3d3401c8-0c2a-4fb0-82ae-85f73fb17d0e" />
     <Project Path="src/AuctionSystem.Presentation/AuctionSystem.Presentation.csproj" Id="a556a100-d667-4709-b9c0-177a63adbf1b" />
   </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/AuctionSystem.Domain.UnitTests/AuctionSystem.Domain.UnitTests.csproj" Id="bd2f8a81-65a3-46b8-bad6-cffcb42353ad" />
+  </Folder>
 </Solution>
