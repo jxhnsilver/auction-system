@@ -1,5 +1,5 @@
 using AuctionSystem.Application.Dtos;
-using AuctionSystem.Domain.Auctions;
+using AuctionSystem.Domain.Aggregates.Auctions;
 using AuctionSystem.Domain.Primitives;
 using MediatR;
 

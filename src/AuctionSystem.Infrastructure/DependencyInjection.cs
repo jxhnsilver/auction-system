@@ -1,10 +1,12 @@
 ﻿using AuctionSystem.Application.Abstractions;
-using AuctionSystem.Domain.Lots;
+using AuctionSystem.Domain.Aggregates.Auctions;
+using AuctionSystem.Domain.Aggregates.Lots;
+using AuctionSystem.Domain.Aggregates.Users;
+using AuctionSystem.Domain.Aggregates.Wallets;
 using AuctionSystem.Domain.Primitives;
-using AuctionSystem.Domain.Auctions;
-using AuctionSystem.Domain.Users;
 using AuctionSystem.Infrastructure.Authentication;
 using AuctionSystem.Infrastructure.Authentication.Jwt;
+using AuctionSystem.Infrastructure.BackgroundServices;
 using AuctionSystem.Infrastructure.Extensions;
 using AuctionSystem.Infrastructure.Persistence.Context;
 using AuctionSystem.Infrastructure.Persistence.Repositories;
@@ -32,6 +34,7 @@ namespace AuctionSystem.Infrastructure
             services.AddScoped<IAuctionRepository, AuctionRepository>();
             services.AddScoped<ILotRepository, LotRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IWalletRepository, WalletRepository>();
 
             services.AddSingleton<IPasswordHasher, PasswordHasher>();
 
@@ -43,6 +46,9 @@ namespace AuctionSystem.Infrastructure
             services.AddScoped<ICurrentUserProvider, CurrentUserProvider>();
 
             services.AddSingleton<IClock, SystemClock>();
+
+            services.AddHostedService<ExpiredAuctionCloserWorker>();
+            services.AddHostedService<ScheduledAuctionOpenerWorker>();
 
             return services;
         }

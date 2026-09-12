@@ -1,6 +1,6 @@
-using AuctionSystem.Domain.Auctions;
-using AuctionSystem.Domain.Lots;
-using AuctionSystem.Domain.Users;
+using AuctionSystem.Domain.Aggregates.Auctions;
+using AuctionSystem.Domain.Aggregates.Lots;
+using AuctionSystem.Domain.Aggregates.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -35,6 +35,11 @@ namespace AuctionSystem.Infrastructure.Persistence.Configurations
                 .HasPrecision(18, 2)
                 .IsRequired();
 
+            builder.Property(a => a.LastBidderId)
+                .HasConversion(
+                    id => id.Value,
+                    value => UserId.From(value));
+
             builder.Property(a => a.CurrentPrice)
                 .HasPrecision(18, 2)
                 .IsRequired();
@@ -67,6 +72,10 @@ namespace AuctionSystem.Infrastructure.Persistence.Configurations
 
             builder.Navigation(a => a.Bids)
                 .HasField("_bids");
+
+            builder.Property<byte[]>("RowVersion")
+                .IsRowVersion()
+                .IsRequired();
         }
     }
 }

@@ -3,5 +3,5 @@ using MediatR;
 
 namespace AuctionSystem.Application.Features.Auctions.Commands.PlaceBid
 {
-    public sealed record PlaceBidCommand(Guid AuctionId, decimal Amount) : IRequest<Result<Guid>>;
+    public sealed record PlaceBidCommand(Guid AuctionId, decimal Amount) : IRequest<Result>;
 }

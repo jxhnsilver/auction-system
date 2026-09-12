@@ -1,5 +1,5 @@
 using AuctionSystem.Application.Dtos;
-using AuctionSystem.Domain.Lots;
+using AuctionSystem.Domain.Aggregates.Lots;
 using AuctionSystem.Domain.Primitives;
 using MediatR;
 
@@ -17,7 +17,7 @@ namespace AuctionSystem.Application.Features.Lots.Queries.GetById
             if (lot is null)
                 return Result<LotDto>.Failure(LotErrors.NotFound(lotId));
 
-            var lotDto = new LotDto(lot.Id.Value, lot.OwnerId.Value, lot.Title);
+            var lotDto = new LotDto(lot.Id.Value, lot.OwnerId.Value, lot.Title, lot.Status.ToString());
 
             return Result<LotDto>.Success(lotDto);
         }

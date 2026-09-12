@@ -30,7 +30,7 @@ namespace AuctionSystem.Presentation.Endpoints.Auctions.Authenticated
 
             var result = await sender.Send(command, cancellationToken);
             if (result.IsSuccess)
-                return Results.Created($"/api/auctions/{auctionId}/bids/{result.Value}", new Response(result.Value));
+                return Results.Ok();
 
             return CustomResults.Problem(result);
         }

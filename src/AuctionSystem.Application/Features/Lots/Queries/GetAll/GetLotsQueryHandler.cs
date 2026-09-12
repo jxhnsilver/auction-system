@@ -1,5 +1,5 @@
 using AuctionSystem.Application.Dtos;
-using AuctionSystem.Domain.Lots;
+using AuctionSystem.Domain.Aggregates.Lots;
 using AuctionSystem.Domain.Primitives;
 using MediatR;
 
@@ -13,7 +13,7 @@ namespace AuctionSystem.Application.Features.Lots.Queries.GetAll
             var lots = await lotRepository.GetAllAsync(cancellationToken);
 
             var lotDtos = lots
-                .Select(l => new LotDto(l.Id.Value, l.OwnerId.Value, l.Title))
+                .Select(l => new LotDto(l.Id.Value, l.OwnerId.Value, l.Title, l.Status.ToString()))
                 .ToList()
                 .AsReadOnly();
 

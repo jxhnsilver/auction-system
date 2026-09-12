@@ -1,5 +1,5 @@
 using AuctionSystem.Application.Abstractions;
-using AuctionSystem.Domain.Lots;
+using AuctionSystem.Domain.Aggregates.Lots;
 using AuctionSystem.Domain.Primitives;
 using AuctionSystem.Domain.Security;
 using MediatR;

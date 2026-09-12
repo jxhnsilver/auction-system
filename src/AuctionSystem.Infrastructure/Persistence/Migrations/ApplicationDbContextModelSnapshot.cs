@@ -22,7 +22,7 @@ namespace AuctionSystem.Infrastructure.Persistence.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("AuctionSystem.Domain.Auctions.Auction", b =>
+            modelBuilder.Entity("AuctionSystem.Domain.Aggregates.Auctions.Auction", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid")
@@ -37,9 +37,20 @@ namespace AuctionSystem.Infrastructure.Persistence.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("end_time");
 
+                    b.Property<Guid?>("LastBidderId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("last_bidder_id");
+
                     b.Property<Guid>("LotId")
                         .HasColumnType("uuid")
                         .HasColumnName("lot_id");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("bytea")
+                        .HasColumnName("row_version");
 
                     b.Property<Guid>("SellerId")
                         .HasColumnType("uuid")
@@ -72,7 +83,7 @@ namespace AuctionSystem.Infrastructure.Persistence.Migrations
                     b.ToTable("auctions", (string)null);
                 });
 
-            modelBuilder.Entity("AuctionSystem.Domain.Auctions.Bid", b =>
+            modelBuilder.Entity("AuctionSystem.Domain.Aggregates.Auctions.Bid", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid")
@@ -104,7 +115,7 @@ namespace AuctionSystem.Infrastructure.Persistence.Migrations
                     b.ToTable("bids", (string)null);
                 });
 
-            modelBuilder.Entity("AuctionSystem.Domain.Lots.Lot", b =>
+            modelBuilder.Entity("AuctionSystem.Domain.Aggregates.Lots.Lot", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid")
@@ -131,7 +142,7 @@ namespace AuctionSystem.Infrastructure.Persistence.Migrations
                     b.ToTable("lots", (string)null);
                 });
 
-            modelBuilder.Entity("AuctionSystem.Domain.Users.User", b =>
+            modelBuilder.Entity("AuctionSystem.Domain.Aggregates.Users.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid")
@@ -158,16 +169,91 @@ namespace AuctionSystem.Infrastructure.Persistence.Migrations
                     b.ToTable("users", (string)null);
                 });
 
-            modelBuilder.Entity("AuctionSystem.Domain.Auctions.Auction", b =>
+            modelBuilder.Entity("AuctionSystem.Domain.Aggregates.Wallets.Wallet", b =>
                 {
-                    b.HasOne("AuctionSystem.Domain.Lots.Lot", null)
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<decimal>("Balance")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)")
+                        .HasColumnName("balance");
+
+                    b.Property<decimal>("LockedBalance")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)")
+                        .HasColumnName("locked_balance");
+
+                    b.Property<Guid>("OwnerId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("owner_id");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("bytea")
+                        .HasColumnName("row_version");
+
+                    b.HasKey("Id")
+                        .HasName("pk_wallets");
+
+                    b.ToTable("wallets", (string)null);
+                });
+
+            modelBuilder.Entity("AuctionSystem.Domain.Aggregates.Wallets.WalletHold", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<decimal>("Amount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)")
+                        .HasColumnName("amount");
+
+                    b.Property<Guid>("AuctionId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("auction_id");
+
+                    b.Property<DateTime?>("CompletedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("completed_at");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)")
+                        .HasColumnName("status");
+
+                    b.Property<Guid>("WalletId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("wallet_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_wallet_holds");
+
+                    b.HasIndex("WalletId")
+                        .HasDatabaseName("ix_wallet_holds_wallet_id");
+
+                    b.ToTable("wallet_holds", (string)null);
+                });
+
+            modelBuilder.Entity("AuctionSystem.Domain.Aggregates.Auctions.Auction", b =>
+                {
+                    b.HasOne("AuctionSystem.Domain.Aggregates.Lots.Lot", null)
                         .WithMany()
                         .HasForeignKey("LotId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("fk_auctions_lots_lot_id");
 
-                    b.HasOne("AuctionSystem.Domain.Users.User", null)
+                    b.HasOne("AuctionSystem.Domain.Aggregates.Users.User", null)
                         .WithMany()
                         .HasForeignKey("SellerId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -175,9 +261,9 @@ namespace AuctionSystem.Infrastructure.Persistence.Migrations
                         .HasConstraintName("fk_auctions_users_seller_id");
                 });
 
-            modelBuilder.Entity("AuctionSystem.Domain.Auctions.Bid", b =>
+            modelBuilder.Entity("AuctionSystem.Domain.Aggregates.Auctions.Bid", b =>
                 {
-                    b.HasOne("AuctionSystem.Domain.Auctions.Auction", null)
+                    b.HasOne("AuctionSystem.Domain.Aggregates.Auctions.Auction", null)
                         .WithMany("Bids")
                         .HasForeignKey("AuctionId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -185,9 +271,24 @@ namespace AuctionSystem.Infrastructure.Persistence.Migrations
                         .HasConstraintName("fk_bids_auctions_auction_id");
                 });
 
-            modelBuilder.Entity("AuctionSystem.Domain.Auctions.Auction", b =>
+            modelBuilder.Entity("AuctionSystem.Domain.Aggregates.Wallets.WalletHold", b =>
+                {
+                    b.HasOne("AuctionSystem.Domain.Aggregates.Wallets.Wallet", null)
+                        .WithMany("Holds")
+                        .HasForeignKey("WalletId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_wallet_holds_wallets_wallet_id");
+                });
+
+            modelBuilder.Entity("AuctionSystem.Domain.Aggregates.Auctions.Auction", b =>
                 {
                     b.Navigation("Bids");
+                });
+
+            modelBuilder.Entity("AuctionSystem.Domain.Aggregates.Wallets.Wallet", b =>
+                {
+                    b.Navigation("Holds");
                 });
 #pragma warning restore 612, 618
         }

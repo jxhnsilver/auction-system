@@ -1,4 +1,4 @@
-﻿using AuctionSystem.Application.Abstractions;
+﻿using AuctionSystem.Domain.Primitives;
 
 namespace AuctionSystem.Infrastructure.Time
 {

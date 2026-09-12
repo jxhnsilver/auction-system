@@ -1,4 +1,4 @@
-﻿using AuctionSystem.Domain.Users;
+﻿using AuctionSystem.Domain.Aggregates.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

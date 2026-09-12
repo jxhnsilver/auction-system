@@ -14,7 +14,7 @@ namespace AuctionSystem.Presentation.Endpoints.Lots.Authenticated
 
         public void MapEndpoint(IEndpointRouteBuilder app)
         {
-            app.MapGet("api/lots/my", (ISender sender, CancellationToken cancellationToken)
+            app.MapGet("api/me/lots", (ISender sender, CancellationToken cancellationToken)
                     => GetMyLots(sender, cancellationToken))
                 .RequireAuthorization()
                 .WithTags("Lots");

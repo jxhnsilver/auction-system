@@ -1,4 +1,4 @@
-﻿using AuctionSystem.Domain.Users;
+﻿using AuctionSystem.Domain.Aggregates.Users;
 
 namespace AuctionSystem.Application.Abstractions
 {
