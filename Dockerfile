@@ -8,7 +8,7 @@ COPY src/AuctionSystem.Domain/*.csproj ./src/AuctionSystem.Domain/
 COPY src/AuctionSystem.Infrastructure/*.csproj ./src/AuctionSystem.Infrastructure/
 COPY src/AuctionSystem.Presentation/*.csproj ./src/AuctionSystem.Presentation/
 
-RUN dotnet restore
+RUN dotnet restore src/AuctionSystem.Api/AuctionSystem.Api.csproj
 
 COPY src/ ./src/
 WORKDIR ./src/AuctionSystem.Api
