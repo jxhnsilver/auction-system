@@ -31,6 +31,8 @@ namespace AuctionSystem.Presentation.Extensions
             {
                 endpoint.MapEndpoint(app);
             }
+
+            app.MapHealthChecks("api/health");
         }
     }
 }
